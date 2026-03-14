@@ -32,6 +32,8 @@
 #include "addons/he_trigger.h"
 #include "addons/tg16_input.h"
 
+#include "addons/uart_input.h"
+
 // Pico includes
 #include "pico/bootrom.h"
 #include "pico/time.h"
@@ -120,6 +122,7 @@ void GP2040::setup() {
 	addons.LoadAddon(new RotaryEncoderInput());
 	addons.LoadAddon(new PCF8575Addon());
 	addons.LoadAddon(new TG16padInput());
+	addons.LoadAddon(new UARTInput());
 
 	// Input override addons
 	addons.LoadAddon(new ReverseInput());
