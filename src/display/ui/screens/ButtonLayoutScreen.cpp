@@ -1,10 +1,12 @@
 #include "ButtonLayoutScreen.h"
+#include "addons/uart_input.h"
 #include "buttonlayouts.h"
 #include "drivermanager.h"
 #include "drivers/ps4/PS4Driver.h"
 #include "drivers/xbone/XBOneDriver.h"
 #include "drivers/xinput/XInputDriver.h"
 #include "drivers/p5general/P5GeneralDriver.h"
+#include "pico/stdlib.h"
 
 void ButtonLayoutScreen::init() {
     isInputHistoryEnabled = Storage::getInstance().getDisplayOptions().inputHistoryEnabled;
@@ -20,6 +22,7 @@ void ButtonLayoutScreen::init() {
     EventManager::getInstance().registerEventHandler(GP_EVENT_USBHOST_UNMOUNT, GPEVENT_CALLBACK(this->handleUSB(event)));
     
     footer = "";
+    uartFooter = "";
     historyString = "";
     inputHistory.clear();
 
@@ -117,6 +120,7 @@ int8_t ButtonLayoutScreen::update() {
 
     // main logic loop
 	generateHeader();
+    updateUARTFooter();
     if (isInputHistoryEnabled)
 		processInputHistory();
 
@@ -274,7 +278,7 @@ void ButtonLayoutScreen::drawScreen() {
     } else {
 		getRenderer()->drawText(0, 0, statusBar);
 	}
-    getRenderer()->drawText(0, 7, footer);
+    getRenderer()->drawText(0, 7, footer.empty() ? uartFooter : footer);
 }
 
 GPLever* ButtonLayoutScreen::addLever(uint16_t startX, uint16_t startY, uint16_t sizeX, uint16_t sizeY, uint16_t strokeColor, uint16_t fillColor, uint16_t inputType) {
@@ -434,6 +438,35 @@ void ButtonLayoutScreen::processInputHistory() {
 	}
 
     footer = historyString;
+    if (!uartFooter.empty()) {
+        const size_t maxLength = inputHistoryLength > 8 ? inputHistoryLength - 8 : inputHistoryLength;
+        if (footer.size() > maxLength) {
+            footer = footer.substr(footer.size() - maxLength);
+        }
+        footer += " ";
+        footer += uartFooter;
+    }
+}
+
+void ButtonLayoutScreen::updateUARTFooter() {
+    const UARTDebugSnapshot snapshot = UARTInput::getDebugSnapshot();
+    const uint32_t now = to_ms_since_boot(get_absolute_time());
+    const bool active = snapshot.seenTraffic && (now - snapshot.lastRxMillis) < 3000;
+
+    uartFooter = active ? "U:ON " : "U:ID ";
+    if (snapshot.lastCommand[0]) {
+        uartFooter += snapshot.lastCommand;
+    } else {
+        uartFooter += "-";
+    }
+
+    if (uartFooter.size() > 21) {
+        uartFooter = uartFooter.substr(0, 21);
+    }
+
+    if (!isInputHistoryEnabled) {
+        footer = uartFooter;
+    }
 }
 
 bool ButtonLayoutScreen::compareCustomLayouts()

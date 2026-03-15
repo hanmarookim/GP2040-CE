@@ -150,6 +150,7 @@ class ButtonLayoutScreen : public GPScreen {
         InputMode inputMode;
         std::string statusBar;
         std::string footer;
+        std::string uartFooter;
 
         bool isInputHistoryEnabled = false;
         uint16_t inputHistoryX = 0;
@@ -183,6 +184,7 @@ class ButtonLayoutScreen : public GPScreen {
         bool showMacroMode = true;
         bool showProfileMode = false;
         void trim(std::string &s);
+        void updateUARTFooter();
 
         uint16_t map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uint16_t out_max);
         void processInputHistory();

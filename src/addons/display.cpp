@@ -120,6 +120,9 @@ bool DisplayAddon::updateDisplayScreen() {
         case STATS:
             gpScreen = new StatsScreen(gpDisplay);
             break;
+        case UART_DEBUG:
+            gpScreen = new UARTDebugScreen(gpDisplay);
+            break;
         case SYSTEM_ERROR:
             gpScreen = new SystemErrorScreen(gpDisplay, errorMessage);
             break;

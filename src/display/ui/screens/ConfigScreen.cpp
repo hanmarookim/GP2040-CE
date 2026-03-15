@@ -27,6 +27,9 @@ int8_t ConfigScreen::update() {
             case (GAMEPAD_MASK_L2):
                 prevButtonState = 0;
                 return DisplayMode::STATS;
+            case (GAMEPAD_MASK_R1):
+                prevButtonState = 0;
+                return DisplayMode::UART_DEBUG;
             default:
                 break;
         }
@@ -43,5 +46,5 @@ void ConfigScreen::drawScreen() {
     getRenderer()->drawText(0, 4, " B1 > Button");
     getRenderer()->drawText(0, 5, " B2 > Splash");
     getRenderer()->drawText(0, 6, " R2 > GPIO Pin Viewer");
-    getRenderer()->drawText(0, 7, " L2 > Stats");
+    getRenderer()->drawText(0, 7, " L2 > Stats  R1 > UART");
 }

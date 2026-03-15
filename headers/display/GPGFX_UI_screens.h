@@ -8,6 +8,7 @@ enum DisplayMode {
     PIN_VIEWER,
     DISPLAY_SAVER,
     STATS,
+    UART_DEBUG,
     MAIN_MENU,
     RESTART,
     SYSTEM_ERROR
@@ -22,5 +23,6 @@ enum DisplayMode {
 #include "ui/screens/SplashScreen.h"
 #include "ui/screens/StatsScreen.h"
 #include "ui/screens/SystemErrorScreen.h"
+#include "ui/screens/UARTDebugScreen.h"
 
 #endif

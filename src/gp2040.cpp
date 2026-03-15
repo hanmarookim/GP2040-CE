@@ -27,6 +27,7 @@
 #include "addons/input_macro.h"
 #include "addons/snes_input.h"
 #include "addons/rotaryencoder.h"
+#include "addons/uart_input.h"
 #include "addons/i2c_gpio_pcf8575.h"
 #include "addons/gamepad_usb_host.h"
 #include "addons/he_trigger.h"
@@ -200,6 +201,10 @@ void GP2040::setup() {
 		gamepad->setInputMode(inputMode);
 		Storage::getInstance().save(true);
 	}
+
+	// UART is loaded after boot-action detection so serial traffic cannot affect
+	// boot mode selection or web-config entry during startup.
+	addons.LoadAddon(new UARTInput());
 
 	// register system event handlers
 	EventManager::getInstance().registerEventHandler(GP_EVENT_STORAGE_SAVE, GPEVENT_CALLBACK(this->handleStorageSave(event)));

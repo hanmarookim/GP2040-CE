@@ -4,7 +4,10 @@
 node_modules/
 configs/MyBoard
 .DS_Store
+__pycache__/
+*.pyc
 build/
+build-*/
 
 .*.sw*
 compile_commands.json

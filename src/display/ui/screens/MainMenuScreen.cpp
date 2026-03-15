@@ -328,6 +328,10 @@ void MainMenuScreen::selectInputMode() {
     }
 }
 
+void MainMenuScreen::openUARTDebug() {
+    exitToScreen = DisplayMode::UART_DEBUG;
+}
+
 int32_t MainMenuScreen::currentInputMode() {
     return updateInputMode;
 }
